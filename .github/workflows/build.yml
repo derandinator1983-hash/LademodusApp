@@ -6,14 +6,70 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Ordnerstruktur automatisch reparieren
+      - name: App-Name, Autor und ASUS Bypass-Icon einbauen
         run: |
           mkdir -p app/src/main/java/com/example/lademodus
           mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/drawable
           [ -f AndroidManifest.xml ] && mv AndroidManifest.xml app/src/main/
           [ -f MainActivity.kt ] && mv MainActivity.kt app/src/main/java/com/example/lademodus/
           [ -f styles.xml ] && mv styles.xml app/src/main/res/values/
           [ -f build.yml ] && rm build.yml
+
+          cat << 'EOF' > app/src/main/res/drawable/ic_lademodus.xml
+          <vector xmlns:android="http://android.com"
+              android:width="108dp"
+              android:height="108dp"
+              android:viewportWidth="108"
+              android:viewportHeight="108">
+              <!-- Dunkelgrauer Hintergrund wie im Bild -->
+              <path
+                  android:fillColor="#262626"
+                  android:pathData="M0,0h108v108h-108z"/>
+              <!-- Ladekabel unten -->
+              <path
+                  android:fillColor="#9E9E9E"
+                  android:pathData="M50,91h8v7h-8zM52,98h4v10h-4z"/>
+              <!-- Grauer Smartphone-Rahmen -->
+              <path
+                  android:fillColor="#BDBDBD"
+                  android:pathData="M34,12h40c3.3,0 6,2.7 6,6v67c0,3.3 -2.7,6 -6,6H34c-3.3,0 -6,-2.7 -6,-6V18C28,14.7 30.7,12 34,12z"/>
+              <!-- Weißes Display -->
+              <path
+                  android:fillColor="#FFFFFF"
+                  android:pathData="M35,15h38c2.2,0 4,1.8 4,4v65c0,2.2 -1.8,4 -4,4H35c-2.2,0 -4,-1.8 -4,-4V19C31,16.8 32.8,15 35,15z"/>
+              <!-- Oberer oranger Blitz -->
+              <path
+                  android:fillColor="#F46524"
+                  android:pathData="M56,22 L46,35 L53,35 L51,45 L62,32 L55,32 Z"/>
+              <!-- Orange Trennlinie -->
+              <path
+                  android:fillColor="#F46524"
+                  android:pathData="M41,49h26v1.2h-26z"/>
+              <!-- Batterie-Pol oben -->
+              <path
+                  android:fillColor="#F46524"
+                  android:pathData="M50,53h8v2.5h-8z"/>
+              <!-- Oranges Batterie-Gehäuse -->
+              <path
+                  android:fillColor="#F46524"
+                  android:pathData="M46,55.5h16c1.5,0 2.5,1 2.5,2.5v16c0,1.5 -1,2.5 -2.5,2.5H46c-1.5,0 -2.5,-1 -2.5,-2.5V58C43.5,56.5 44.5,55.5 46,55.5z"/>
+              <!-- Weißer Blitz in der Batterie -->
+              <path
+                  android:fillColor="#FFFFFF"
+                  android:pathData="M55,59 L49,66.5 L53.5,66.5 L52,73 L59,65 L54.5,65 Z"/>
+              <!-- Schriftzug AUTO -->
+              <path
+                  android:fillColor="#F46524"
+                  android:pathData="M43,84v-4h3v4h-1v-1.5h-1V84H43zM44,81v0.8h1V81H44z M48,80h1v3h1v-3h1v3c0,0.6 -0.4,1 -1,1h-1c-0.6,0 -1,-0.4 -1,-1V80z M53,80h4v1h-1.5v3h-1v-3H53V80z M59,80h2c0.6,0 1,0.4 1,1v2c0,0.6 -0.4,1 -1,1h-2c-0.6,0 -1,-0.4 -1,-1v-2C58,80.4 58.4,80 59,80zM59,81v2h2v-2H59z"/>
+          </vector>
+          EOF
+
+          sed -i 's/android:icon="[^"]*"/android:icon="@drawable\/ic_lademodus"/g' app/src/main/AndroidManifest.xml
+          sed -i 's/android:roundIcon="[^"]*"/android:roundIcon="@drawable\/ic_lademodus"/g' app/src/main/AndroidManifest.xml
+          sed -i 's/android:label="[^"]*"/android:label="Asus Rog Phone Lademodus"/g' app/src/main/AndroidManifest.xml
+          sed -i 's/<\/application>/<meta-data android:name="author" android:value="Andi Ziehn" \/><meta-data android:name="developer" android:value="Andi Ziehn" \/><\/application>/g' app/src/main/AndroidManifest.xml
+
           cat << 'EOF' > build.gradle
           plugins {
               id 'com.android.application' version '8.2.2' apply false
@@ -32,8 +88,8 @@ jobs:
                   applicationId "com.example.lademodus"
                   minSdk 26
                   targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
+                  versionCode 4
+                  versionName "1.3 (Andi Ziehn)"
               }
               compileOptions {
                   sourceCompatibility JavaVersion.VERSION_17
