@@ -19,6 +19,7 @@ jobs:
           cp -r temp_icons/android/res/* app/src/main/res/
           rm -rf temp_icons
 
+          sed -i 's|android.com|://android.com|g' app/src/main/AndroidManifest.xml
           sed -i 's/android:icon="[^"]*"/android:icon="@mipmap\/ic_launcher"/g' app/src/main/AndroidManifest.xml
           sed -i 's/android:label="[^"]*"/android:label="Asus Rog Phone Lademodus"/g' app/src/main/AndroidManifest.xml
           sed -i 's/<\/application>/<meta-data android:name="author" android:value="Andi Ziehn" \/><meta-data android:name="developer" android:value="Andi Ziehn" \/><\/application>/g' app/src/main/AndroidManifest.xml
